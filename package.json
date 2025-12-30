@@ -8,5 +8,13 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Divyasrirowtu/dex-amm.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Divyasrirowtu/dex-amm/issues"
+  },
+  "homepage": "https://github.com/Divyasrirowtu/dex-amm#readme",
   "description": ""
 }
