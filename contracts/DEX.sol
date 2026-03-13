@@ -138,13 +138,23 @@ function sqrt(uint256 y) internal pure returns (uint256 z) {
     emit Swap(msg.sender, tokenB, tokenA, amountBIn, amountAOut);
 }
 
-    function getPrice() external view returns (uint256 price) {
-        // Implementation will be added later
-    }
+    function getPrice() 
+    external 
+    view 
+    returns (uint256 price) 
+{
+    require(reserveA > 0, "No reserves available");
+    price = (reserveB * 1e18) / reserveA; // multiplied by 1e18 for precision
+}
 
-    function getReserves() external view returns (uint256 _reserveA, uint256 _reserveB) {
-        return (reserveA, reserveB);
-    }
+    function getReserves() 
+    external 
+    view 
+    returns (uint256 _reserveA, uint256 _reserveB) 
+{
+    _reserveA = reserveA;
+    _reserveB = reserveB;
+}
 
     function getAmountOut(uint256 amountIn, uint256 reserveIn, uint256 reserveOut) 
     public 
