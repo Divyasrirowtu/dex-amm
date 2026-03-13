@@ -25,9 +25,42 @@ contract DEX {
     }
 
     function addLiquidity(uint256 amountA, uint256 amountB) external returns (uint256 liquidityMinted) {
-        // Implementation will be added later
+    require(amountA > 0 && amountB > 0, "Cannot add zero liquidity");
+
+    IERC20(tokenA).safeTransferFrom(msg.sender, address(this), amountA);
+    IERC20(tokenB).safeTransferFrom(msg.sender, address(this), amountB);
+
+    if (totalLiquidity == 0) {
+        // First liquidity provider
+        liquidityMinted = sqrt(amountA * amountB);
+        totalLiquidity = liquidityMinted;
+        liquidity[msg.sender] = liquidityMinted;
+    } else {
+        // Subsequent providers will be handled in Step 5
+        liquidityMinted = 0;
     }
 
+    // Update reserves
+    reserveA += amountA;
+    reserveB += amountB;
+
+    emit LiquidityAdded(msg.sender, amountA, amountB, liquidityMinted);
+    return liquidityMinted;
+}
+
+// Internal helper function to calculate square root
+function sqrt(uint256 y) internal pure returns (uint256 z) {
+    if (y > 3) {
+        z = y;
+        uint256 x = y / 2 + 1;
+        while (x < z) {
+            z = x;
+            x = (y / x + x) / 2;
+        }
+    } else if (y != 0) {
+        z = 1;
+    }
+}
     function removeLiquidity(uint256 liquidityAmount) external returns (uint256 amountA, uint256 amountB) {
         // Implementation will be added later
     }
