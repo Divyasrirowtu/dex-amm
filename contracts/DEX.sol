@@ -36,9 +36,21 @@ contract DEX {
         totalLiquidity = liquidityMinted;
         liquidity[msg.sender] = liquidityMinted;
     } else {
-        // Subsequent providers will be handled in Step 5
-        liquidityMinted = 0;
+    // Maintain ratio: amountB_required = (amountA * reserveB) / reserveA
+    uint256 amountBOptimal = (amountA * reserveB) / reserveA;
+    require(amountB >= amountBOptimal, "Insufficient amountB to maintain ratio");
+
+    liquidityMinted = (amountA * totalLiquidity) / reserveA; // proportional LP tokens
+    totalLiquidity += liquidityMinted;
+    liquidity[msg.sender] += liquidityMinted;
+
+    // If user sent extra tokenB, refund the excess
+    if (amountB > amountBOptimal) {
+        uint256 refund = amountB - amountBOptimal;
+        IERC20(tokenB).safeTransfer(msg.sender, refund);
+        amountB = amountBOptimal; // only add optimal amount to pool
     }
+}
 
     // Update reserves
     reserveA += amountA;
