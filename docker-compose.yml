@@ -1,0 +1,9 @@
+version: "3.9"
+
+services:
+  dex-app:
+    build: .
+    container_name: dex-app
+    volumes:
+      - .:/app
+    command: npm test
