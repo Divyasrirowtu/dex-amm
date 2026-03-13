@@ -4,11 +4,11 @@
   "description": "Simplified DEX AMM project",
   "main": "index.js",
   "scripts": {
-    "compile": "hardhat compile",
-    "test": "hardhat test",
-    "coverage": "hardhat coverage",
-    "deploy": "hardhat run scripts/deploy.js"
-  },
+  "compile": "hardhat compile",
+  "test": "hardhat test",
+  "coverage": "hardhat coverage",
+  "deploy": "hardhat run scripts/deploy.js"
+},
   "author": "Divya Sri Rowtu",
   "license": "MIT",
   "devDependencies": {
