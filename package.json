@@ -1,0 +1,21 @@
+{
+  "name": "dex-amm",
+  "version": "1.0.0",
+  "description": "Simplified DEX AMM project",
+  "main": "index.js",
+  "scripts": {
+    "compile": "hardhat compile",
+    "test": "hardhat test",
+    "coverage": "hardhat coverage",
+    "deploy": "hardhat run scripts/deploy.js"
+  },
+  "author": "Divya Sri Rowtu",
+  "license": "MIT",
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^7.0.0",
+    "hardhat": "^3.1.12"
+  },
+  "dependencies": {
+    "@openzeppelin/contracts": "^5.6.1"
+  }
+}
