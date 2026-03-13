@@ -98,13 +98,45 @@ function sqrt(uint256 y) internal pure returns (uint256 z) {
     emit LiquidityRemoved(msg.sender, amountA, amountB, liquidityAmount);
 }
 
-    function swapAForB(uint256 amountAIn) external returns (uint256 amountBOut) {
-        // Implementation will be added later
-    }
+    function swapAForB(uint256 amountAIn) 
+    external 
+    returns (uint256 amountBOut) 
+{
+    require(amountAIn > 0, "Swap amount must be > 0");
 
-    function swapBForA(uint256 amountBIn) external returns (uint256 amountAOut) {
-        // Implementation will be added later
-    }
+    // Calculate output
+    amountBOut = getAmountOut(amountAIn, reserveA, reserveB);
+
+    // Update reserves
+    reserveA += amountAIn;
+    reserveB -= amountBOut;
+
+    // Transfer tokens
+    IERC20(tokenA).safeTransferFrom(msg.sender, address(this), amountAIn);
+    IERC20(tokenB).safeTransfer(msg.sender, amountBOut);
+
+    emit Swap(msg.sender, tokenA, tokenB, amountAIn, amountBOut);
+}
+
+    function swapBForA(uint256 amountBIn) 
+    external 
+    returns (uint256 amountAOut) 
+{
+    require(amountBIn > 0, "Swap amount must be > 0");
+
+    // Calculate output
+    amountAOut = getAmountOut(amountBIn, reserveB, reserveA);
+
+    // Update reserves
+    reserveB += amountBIn;
+    reserveA -= amountAOut;
+
+    // Transfer tokens
+    IERC20(tokenB).safeTransferFrom(msg.sender, address(this), amountBIn);
+    IERC20(tokenA).safeTransfer(msg.sender, amountAOut);
+
+    emit Swap(msg.sender, tokenB, tokenA, amountBIn, amountAOut);
+}
 
     function getPrice() external view returns (uint256 price) {
         // Implementation will be added later
@@ -114,7 +146,17 @@ function sqrt(uint256 y) internal pure returns (uint256 z) {
         return (reserveA, reserveB);
     }
 
-    function getAmountOut(uint256 amountIn, uint256 reserveIn, uint256 reserveOut) public pure returns (uint256 amountOut) {
-        // Implementation will be added later
-    }
+    function getAmountOut(uint256 amountIn, uint256 reserveIn, uint256 reserveOut) 
+    public 
+    pure 
+    returns (uint256 amountOut) 
+{
+    require(amountIn > 0, "Amount in must be > 0");
+    require(reserveIn > 0 && reserveOut > 0, "Invalid reserves");
+
+    uint256 amountInWithFee = amountIn * 997; // 0.3% fee
+    uint256 numerator = amountInWithFee * reserveOut;
+    uint256 denominator = (reserveIn * 1000) + amountInWithFee;
+    amountOut = numerator / denominator;
+}
 }
