@@ -73,9 +73,30 @@ function sqrt(uint256 y) internal pure returns (uint256 z) {
         z = 1;
     }
 }
-    function removeLiquidity(uint256 liquidityAmount) external returns (uint256 amountA, uint256 amountB) {
-        // Implementation will be added later
-    }
+    function removeLiquidity(uint256 liquidityAmount) 
+    external 
+    returns (uint256 amountA, uint256 amountB) 
+{
+    require(liquidityAmount > 0, "Cannot remove zero liquidity");
+    require(liquidity[msg.sender] >= liquidityAmount, "Not enough LP tokens");
+
+    // Calculate proportional amounts to withdraw
+    amountA = (liquidityAmount * reserveA) / totalLiquidity;
+    amountB = (liquidityAmount * reserveB) / totalLiquidity;
+
+    // Update state
+    liquidity[msg.sender] -= liquidityAmount;
+    totalLiquidity -= liquidityAmount;
+
+    reserveA -= amountA;
+    reserveB -= amountB;
+
+    // Transfer tokens back to user
+    IERC20(tokenA).safeTransfer(msg.sender, amountA);
+    IERC20(tokenB).safeTransfer(msg.sender, amountB);
+
+    emit LiquidityRemoved(msg.sender, amountA, amountB, liquidityAmount);
+}
 
     function swapAForB(uint256 amountAIn) external returns (uint256 amountBOut) {
         // Implementation will be added later
